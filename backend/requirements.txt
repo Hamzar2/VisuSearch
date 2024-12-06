@@ -1,7 +1,7 @@
-Flask==3.0.2
-Flask-SQLAlchemy==3.1.1
-Flask-CORS==4.0.0
-numpy==1.26.4
-opencv-python-headless==4.9.0.80
-scikit-image==0.22.0
-pillow==10.2.0
+Flask
+Flask-SQLAlchemy
+Flask-CORS
+numpy
+opencv-python-headless
+scikit-image
+pillow
