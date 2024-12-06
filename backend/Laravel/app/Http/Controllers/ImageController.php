@@ -6,9 +6,11 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+set_time_limit(120); // set it to 120 seconds or higher
 
 class ImageController extends Controller
 {
+    
     private $flaskApiUrl = 'http://localhost:5000/api';
 
     public function upload(Request $request)
@@ -27,6 +29,8 @@ class ImageController extends Controller
             file_get_contents(storage_path('app/' . $path)), 
             basename($path)
         )->post($this->flaskApiUrl . '/features');
+        
+        // echo "here";
 
         if (!$response->successful()) {
             return response()->json(['error' => 'Feature extraction failed'], 500);

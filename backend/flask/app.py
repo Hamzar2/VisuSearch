@@ -138,7 +138,7 @@ def extract_image_features(image):
 
 
 # API Routes
-@app.route('/api/images/upload', methods=['POST'])
+@app.route('/api/upload', methods=['POST'])
 def upload_image():
     if 'image' not in request.files:
         return jsonify({'error': 'No image provided'}), 400
@@ -178,7 +178,7 @@ def upload_image():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/images/search', methods=['POST'])
+@app.route('/api/search', methods=['POST'])
 def search_images():
     if 'query_image' not in request.files:
         return jsonify({'error': 'No query image provided'}), 400

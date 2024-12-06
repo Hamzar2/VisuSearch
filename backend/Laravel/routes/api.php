@@ -18,6 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/images/upload', [ImageController::class, 'ImageController@upload']);
-Route::post('/images/search', [ImageController::class, 'ImageController@search']);
-Route::post('/images/feedback', [ImageController::class, 'ImageController@relevanceFeedback']);
+Route::post('/images/upload', [ImageController::class, 'upload']);
+Route::post('/images/search', [ImageController::class, 'search']);
+Route::post('/images/feedback', [ImageController::class, 'relevanceFeedback']);

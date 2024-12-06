@@ -15,20 +15,15 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+   
 
-    'allowed_methods' => ['*'],
-
-    'allowed_origins' => ['*'],
-
+    'paths' => ['api/*'], // Apply CORS to API routes
+    'allowed_methods' => ['*'], // Allow all HTTP methods
+    'allowed_origins' => ['*'], // Allow requests from your frontend
     'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'],
-
+    'allowed_headers' => ['*'], // Allow all headers
     'exposed_headers' => [],
-
     'max_age' => 0,
-
     'supports_credentials' => false,
-
 ];
+
