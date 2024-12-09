@@ -10,10 +10,15 @@ class Image extends Model
         'path',
         'url',
         'category',
-        'features'
+        'features',
+        'hash'
     ];
 
     protected $casts = [
         'features' => 'array'
+    ];
+
+    protected $attributes = [
+        'hash' => '',
     ];
 }

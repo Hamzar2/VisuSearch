@@ -46,6 +46,11 @@
     <div v-if="error" class="mt-4 text-red-500">
       {{ error }}
     </div>
+
+    <!-- Success Notification -->
+    <div v-if="successMessage" class="mt-4 p-2 bg-green-200 text-green-800 rounded-lg shadow">
+      {{ successMessage }}
+    </div>
   </div>
 </template>
 
@@ -59,6 +64,7 @@ const selectedCategory = ref('')
 const categories = imageStore.categories
 const loading = ref(false)
 const error = ref(null)
+const successMessage = ref('') 
 
 const handleFileSelect = (event) => {
   selectedFiles.value = Array.from(event.target.files)
@@ -67,13 +73,24 @@ const handleFileSelect = (event) => {
 const uploadImages = async () => {
   loading.value = true
   error.value = null
-  
+  successMessage.value = '' 
+
   try {
     for (const file of selectedFiles.value) {
       await imageStore.uploadImage(file, selectedCategory.value)
     }
+    
+    // Clear selected files and category after successful upload
     selectedFiles.value = []
     selectedCategory.value = ''
+
+    // Set success message
+    successMessage.value = 'Images uploaded successfully!'
+    
+    // Automatically hide the success message after 3 seconds
+    setTimeout(() => {
+      successMessage.value = ''
+    }, 3000)
   } catch (err) {
     error.value = err.message
   } finally {

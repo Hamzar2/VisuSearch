@@ -24,7 +24,7 @@ class CreatePersonalAccessTokensTable extends Migration
                 $table->timestamps();
 
                 // Create a shorter index name
-                $table->index(['tokenable_type', 'tokenable_id'], 'tokenable_index');
+                $table->index(['tokenable_type', 'tokenable_id'], 'personal_access_tokens_tokenable_type_tokenable_id_index', 1000);
             });
         }
     }

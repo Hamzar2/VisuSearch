@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('url');
             $table->string('category');
             $table->json('features');
+            $table->string('hash');
             $table->timestamps();
         });
     }

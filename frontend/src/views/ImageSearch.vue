@@ -15,6 +15,10 @@
         >
       </div>
 
+      <div v-if="queryImageUrl" class="mb-4">
+        <img :src="queryImageUrl" alt="Uploaded Image" class="max-w-full h-auto rounded-lg shadow-md"/>
+      </div>
+
       <div class="mb-4">
         <label class="flex items-center">
           <input 
@@ -74,13 +78,27 @@ import ImageCard from '../components/ImageCard.vue'
 
 const imageStore = useImageStore()
 const queryImage = ref(null)
+const queryImageUrl = ref(null)
 const useRelevanceFeedback = ref(false)
 const loading = ref(false)
 const searchResults = ref([])
+const relevantIds = ref([])
+const irrelevantIds = ref([])
 
 const handleQueryImage = (event) => {
-  queryImage.value = event.target.files[0]
+  const file = event.target.files[0]
+  queryImage.value = file
+
+  // Create a URL for the uploaded image
+  queryImageUrl.value = URL.createObjectURL(file)
+
+  // Reset relevance feedback data
+  relevantIds.value = []
+  irrelevantIds.value = []
+  searchResults.value = [] // Clear previous search results
+  console.log('Relevance feedback reset for new query image.')
 }
+
 
 const searchImages = async () => {
   if (!queryImage.value) return
@@ -100,6 +118,25 @@ const searchImages = async () => {
 }
 
 const markRelevance = async (index, isRelevant) => {
-  // Implementation would depend on your backend API
+  const imageId = searchResults.value[index]?.id
+  if (!imageId) return
+
+  if (isRelevant) {
+    relevantIds.value.push(imageId)
+    console.log(relevantIds.value);
+  } else {
+    irrelevantIds.value.push(imageId)
+    console.log(irrelevantIds.value);
+  }
+
+  try {
+    // Send the feedback to the backend
+    await imageStore.submitRelevanceFeedback(relevantIds.value, irrelevantIds.value)
+    
+    // Re-search with updated results
+    await searchImages()
+  } catch (error) {
+    console.error('Error marking relevance:', error)
+  }
 }
 </script>

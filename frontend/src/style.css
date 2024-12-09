@@ -77,3 +77,9 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.w-full.h-48.object-cover.rounded-lg {
+  width: 200px; /* adjust the value as needed */
+  height: 150px; /* adjust the value as needed */
+  object-fit: cover;
+}
