@@ -1,29 +1,3 @@
-<style>
-/* Conteneur d'images */
-.image-container {
-    display: flex;             /* Utilisation de flexbox pour un agencement flexible */
-    justify-content: space-around;  /* Espacement égal entre les images */
-    align-items: center;       /* Alignement vertical des images */
-    flex-wrap: wrap;           /* Les images se déplacent sur plusieurs lignes si nécessaire */
-    gap: 20px;                 /* Espacement entre les images */
-    padding: 20px;             /* Padding autour des images */
-}
-
-/* Style des images */
-.image {
-    width: 300px;              /* Largeur fixe pour chaque image */
-    height: auto;              /* Hauteur automatique pour garder les proportions */
-    border-radius: 8px;        /* Coins arrondis pour un effet esthétique */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère autour des images */
-    transition: transform 0.3s ease; /* Transition douce au survol */
-}
-
-.image:hover {
-    transform: scale(1.05);     /* Agrandissement léger au survol */
-}
-</style>
-
-
 # VisuSearch  
 
 **Lien du projet :** [VisuSearch GitHub Repository](https://github.com/Hamzar2/VisuSearch/tree/main)  
@@ -88,9 +62,8 @@ VisuSearch est une application web innovante dédiée à l’indexation et la re
 4. Lancer les serveurs backend et frontend.
 
 
-<div class="image-container">
-    <img src="frontend\src\assets\c.jpeg" alt="Image 1" class="image">
-    <img src="frontend\src\assets\b.jpeg" alt="Image 2" class="image">
-    <img src="frontend\src\assets\a.jpeg" alt="Image 3" class="image">
-    <img src="frontend\src\assets\d.jpeg" alt="Image 3" class="image">
+<div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+    <img src="image1.jpg" alt="Image 1" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+    <img src="image2.jpg" alt="Image 2" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+    <img src="image3.jpg" alt="Image 3" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
 </div>
