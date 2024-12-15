@@ -63,7 +63,8 @@ VisuSearch est une application web innovante dédiée à l’indexation et la re
 
 
 <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
-    <img src="image1.jpg" alt="Image 1" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
-    <img src="image2.jpg" alt="Image 2" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
-    <img src="image3.jpg" alt="Image 3" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+    <img src="frontend\src\assets\b.jpeg" alt="Image 1" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+    <img src="frontend\src\assets\c.jpeg" alt="Image 2" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+    <img src="frontend\src\assets\a.jpeg" alt="Image 3" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+    <img src="frontend\src\assets\d.jpeg" alt="Image 3" style="width: 300px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
 </div>
