@@ -21,4 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/images/upload', [ImageController::class, 'upload']);
 Route::post('/images/search', [ImageController::class, 'search']);
 Route::post('/images/feedback', [ImageController::class, 'relevanceFeedback']);
-Route::post('/images/feedbackSearch', [ImageController::class,'feedbackSearch']);
+Route::get('/images/getimages', [ImageController::class,'index']);
+Route::post('/images/update', [ImageController::class,'update']);
+Route::post('/images/delete', [ImageController::class,'destroy']);
+Route::post('/images/transform', [ImageController::class,'transform']);

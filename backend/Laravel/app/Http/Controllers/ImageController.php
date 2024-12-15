@@ -492,5 +492,196 @@ class ImageController extends Controller
     }
 
 
+    /**
+     * Fetches all images from the database.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON response with all images.
+     */
+    public function index()
+    {
+        $images = Image::all();
+        return response()->json($images);
+    }
+
+    /**
+     * Updates an existing image's file and/or category.
+     *
+     * @param Request $request The HTTP request object containing the new image file and/or category.
+     * @return \Illuminate\Http\JsonResponse JSON response with the updated image data or an error message.
+     */
+    public function update(Request $request)
+    {
+        // Retrieve the image ID from the request
+        $id = $request->input('id');
+        Log::info("Image update request received for ID: $id");
+
+        // Find the image by ID
+        $image = Image::find($id);
+        if (!$image) {
+            Log::error("Image with ID $id not found");
+            return response()->json(['error' => 'Image not found'], 404);
+        }
+
+        // Validate the request
+        $request->validate([
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category' => 'string',
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Delete the old image file
+            Storage::disk('public')->delete($image->path);
+
+            // Store the new image file
+            $imageFile = $request->file('image');
+            $path = $imageFile->store('public/images');
+            $url = Storage::url($path);
+
+            Log::info("New image stored at $path");
+
+            // Extract features using the stored path
+            $features = $this->extractFeaturesFromFlask($path);
+            if (!$features) {
+                Log::error('Feature extraction failed for updated image');
+                return response()->json(['error' => 'Feature extraction failed'], 500);
+            }
+
+            $image->path = $path;
+            $image->url = $url;
+            $image->features = json_encode($features);
+
+            // Generate a new hash for the uploaded image
+            $hash = hash('md5', file_get_contents($imageFile->getRealPath()));
+            Log::info("New image hash: $hash");
+
+            $image->hash = $hash;
+        }
+
+        if ($request->has('category')) {
+            $image->category = $request->category;
+        }
+
+        // Save the updated image record
+        $image->save();
+
+        Log::info("Image with ID $id updated successfully");
+
+        return response()->json($image);
+    }
+
+
+
+    /**
+     * Deletes an image and its associated file from the storage.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON response with a message indicating the deletion status.
+     */
+    public function destroy(Request $request)
+    {
+        $id = $request->input('id');
+        $image = Image::find($id);
+        if (!$image) {
+            return response()->json(['error' => 'Image not found'], 404);
+        }
+
+        // Delete the image file
+        Storage::disk('public')->delete($image->path);
+
+        $image->delete();
+
+        return response()->json(['message' => 'Image deleted successfully']);
+    }
+
+
+    public function transform(Request $request)
+    {
+        $request->validate([
+            'base_image_id' => 'required|exists:images,id',
+            'transformation' => 'required|string|in:crop,resize,rotate,grayscale,flip_horizontal,flip_vertical',
+            'x' => 'sometimes|integer',
+            'y' => 'sometimes|integer',
+            'width' => 'sometimes|integer',
+            'height' => 'sometimes|integer',
+            'angle' => 'sometimes|integer',
+        ]);
+
+        $baseImage = Image::find($request->base_image_id);
+        if (!$baseImage) {
+            return response()->json(['error' => 'Base image not found'], 404);
+        }
+
+        try {
+            // 1. Prepare data for Flask
+            $formData = [
+                'transformation' => $request->transformation,
+                'x' => $request->input('x', 0), // Provide default values
+                'y' => $request->input('y', 0),
+                'width' => $request->input('width', 0),
+                'height' => $request->input('height', 0),
+                'angle' => $request->input('angle', 0),
+            ];
+
+            $imagePath = Storage::path($baseImage->path); // Use Storage::path()
+            Log::info('Image Path: ' . $imagePath);
+
+            if (!file_exists($imagePath)) {
+                Log::error('Image file not found: ' . $imagePath);
+                return response()->json(['error' => 'Image file not found'], 404);
+            }
+
+            $imageData = file_get_contents($imagePath); 
+            if ($imageData === false) {
+                Log::error('Error reading image file: ' . $imagePath);
+                return response()->json(['error' => 'Error reading image file'], 500);
+            }
+
+
+            $response = Http::attach(
+                'image', $imageData, basename($baseImage->path)
+            )->asForm()->post("{$this->flaskApiUrl}/transform", $formData);
+
+            // 3. Handle Flask response
+            if (!$response->successful()) {
+                Log::error("Flask API request failed: " . $response->body());
+                 // Clean up if Flask transformation fails
+
+                return response()->json(['error' => 'Image transformation failed (Flask)'], 500);
+            }
+
+            $transformedImageData = $response->json('transformed_image');
+            if (!$transformedImageData) {
+                Log::error("Invalid response from Flask API (no transformed_image)");
+                return response()->json(['error' => 'Invalid response from Flask'], 500);
+
+            }
+
+            // 4. Save Transformed Image
+            $extension = pathinfo($baseImage->path, PATHINFO_EXTENSION); //Get extension from original
+            $path = 'public/images/transformed_' . time() . '_' . uniqid() . '.' . $extension;
+            Storage::put($path, base64_decode($transformedImageData));
+            $url = Storage::url($path);
+
+             $features = $this->extractFeaturesFromFlask($path);
+            if (!$features) {
+                // Clean up if feature extraction fails
+                Storage::delete($path);  
+                return response()->json(['error' => 'Feature extraction failed'], 500);
+            }
+
+            $newImage = Image::create([
+                'path' => $path,
+                'url' => $url,
+                'category' => $baseImage->category, 
+                'features' => json_encode($features),
+                'hash' => hash_file('md5', Storage::path($path))
+            ]);
+
+            return response()->json($newImage, 201);
+
+        } catch (\Exception $e) {
+            Log::error("Image transformation failed: " . $e->getMessage());
+            return response()->json(['error' => 'Image transformation failed'], 500);
+        }
+    }
 
 }

@@ -58,6 +58,7 @@
 import { ref } from 'vue'
 import { useImageStore } from '../stores/imageStore'
 
+
 const imageStore = useImageStore()
 const selectedFiles = ref([])
 const selectedCategory = ref('')

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import ImageUpload from '../views/ImageUpload.vue'
 import ImageSearch from '../views/ImageSearch.vue'
-import ImageCategories from '../views/ImageCategories.vue'
+import ImageTable from '../views/ImageTable.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,10 +23,10 @@ const router = createRouter({
       component: ImageSearch
     },
     {
-      path: '/categories',
-      name: 'categories',
-      component: ImageCategories
-    }
+      path: '/table',
+      name: 'table',
+      component: ImageTable
+    },
   ]
 })
 
